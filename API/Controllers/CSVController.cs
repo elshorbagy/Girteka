@@ -37,7 +37,7 @@ namespace API.Controllers
                 return Ok(data);
             }
             catch (Exception exception)
-            {
+        {
                 return BadRequest(exception.Message);
             }
         }
