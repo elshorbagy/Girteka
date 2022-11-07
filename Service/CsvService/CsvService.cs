@@ -53,13 +53,13 @@ namespace Service.CsvService
             try
             {
                 IEnumerable<string> lines = await GetCSVData();
-            
+
                 MapCsvData(lines);
-                
-                // As the requirment says use EF For Database communication, I did not use SQL Bulk insert
+
+                // As the requirment says to use EF For Database communication, I did not use SQL Bulk insert
                 var saveRegionsResult = await _sqlRepository.AddBulkRegionAsync(_regionList, cancellationToken);
                 var saveElectricityResult = await _sqlRepository.AddBulkElectricityAsync(_electricityList, cancellationToken);
-                
+
                 return saveRegionsResult && saveElectricityResult;
             }
             catch (Exception exception)
@@ -92,8 +92,11 @@ namespace Service.CsvService
 
             _ = Parallel.ForEach(lines, options, line =>
             {
-                var values = line.Split(_configuration.Delimiter);
-                AddRegion(_regionList, values[0], Interlocked.Increment(ref index));
+                if (!line.Contains("OBT_PAVADINIMAS"))
+                {
+
+                    var values = line.Split(_configuration.Delimiter);
+                    AddRegion(_regionList, values[0], Interlocked.Increment(ref index));
 
                 var electricityData = new Electricity
                 {
@@ -106,7 +109,8 @@ namespace Service.CsvService
                     Pminusas = !string.IsNullOrEmpty(values[6]) ? decimal.Parse(values[6]) : null
                 };
 
-                _electricityList.Add(electricityData);
+                    _electricityList.Add(electricityData);
+                }
             });
         }
 
