@@ -4,6 +4,7 @@ using Repository.FileRepository;
 using Repository.SQLRepository;
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Service.CsvService
 {
@@ -54,7 +55,8 @@ namespace Service.CsvService
                 IEnumerable<string> lines = await GetCSVData();
             
                 MapCsvData(lines);
-                                
+                
+                // As the requirment says use EF For Database communication, I did not use SQL Bulk insert
                 var saveRegionsResult = await _sqlRepository.AddBulkRegionAsync(_regionList, cancellationToken);
                 var saveElectricityResult = await _sqlRepository.AddBulkElectricityAsync(_electricityList, cancellationToken);
                 
@@ -73,7 +75,7 @@ namespace Service.CsvService
 
             foreach (var file in _configuration.Files)
             {
-                IEnumerable<string> lines = await _csvFileReaderRepository.Read(file);
+                IEnumerable<string> lines = await _csvFileReaderRepository.Read(file, true);
                 data = data.Concat(lines);
             }
             return data;
@@ -96,7 +98,7 @@ namespace Service.CsvService
                 var electricityData = new Electricity
                 {
                     Pavadinimas = !string.IsNullOrEmpty(values[1]) ? values[1] : null,
-                    RegionId = _regionList.FirstOrDefault(x=>x.RegionName == values[0]).RegionId,
+                    RegionId = _regionList.FirstOrDefault(x => x.RegionName == values[0]).RegionId,
                     Tipas = !string.IsNullOrEmpty(values[2]) ? values[2] : null,
                     Numeris = !string.IsNullOrEmpty(values[3]) ? int.Parse(values[3]) : null,
                     Ppliusas = !string.IsNullOrEmpty(values[4]) ? decimal.Parse(values[4]) : null,

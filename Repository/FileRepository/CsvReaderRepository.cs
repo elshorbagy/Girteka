@@ -8,15 +8,14 @@ namespace Repository.FileRepository
 
         public CsvReaderRepository()
         {
-            _path = Path.Combine(Directory
-                .GetParent(Directory.GetCurrentDirectory())
-                .FullName, @"Repository\Data\");
+            _path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Data/");         
         }
 
-        public async Task<IEnumerable<string>> Read(string filename)
+        public async Task<IEnumerable<string>> Read(string filename, bool hasHeader)
         {
             var filePath = _path + filename;
-            return await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
+            var lines = await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
+            return hasHeader ? lines.Skip(1) : lines;
         }
     }
 }

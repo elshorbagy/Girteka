@@ -2,6 +2,6 @@
 {
     public interface ICsvReaderRepository
     {
-        Task<IEnumerable<string>> Read(string path);
+        Task<IEnumerable<string>> Read(string path, bool hasHeader);
     }
 }

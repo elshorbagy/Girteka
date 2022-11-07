@@ -15,7 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<SQLDBContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.Configure<CsvConfiguration>(builder.Configuration.GetSection("Configuration"));
+builder.Services.Configure<CsvConfiguration>(builder.Configuration.GetSection("CsvConfiguration"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
