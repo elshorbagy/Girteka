@@ -8,9 +8,7 @@ namespace Repository.FileRepository
 
         public CsvReaderRepository()
         {
-            _path = Path.Combine(Directory
-                .GetParent(Directory.GetCurrentDirectory())
-                .FullName, @"Repository\Data\");
+            _path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Data/");         
         }
 
         public async Task<IEnumerable<string>> Read(string filename)
