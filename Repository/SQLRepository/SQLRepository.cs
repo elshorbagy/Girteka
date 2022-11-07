@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Repository.DBContext;
 
@@ -18,8 +19,7 @@ namespace Repository.SQLRepository
             var transaction = await _sqlDbContext.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                await _sqlDbContext.AddRangeAsync(electricities, cancellationToken);
-                await _sqlDbContext.SaveChangesAsync(cancellationToken);
+                await _sqlDbContext.BulkInsertAsync(electricities.ToList(), cancellationToken: cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return true;
             }

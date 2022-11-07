@@ -53,13 +53,12 @@ namespace Service.CsvService
             try
             {
                 IEnumerable<string> lines = await GetCSVData();
-            
+
                 MapCsvData(lines);
-                
-                // As the requirment says use EF For Database communication, I did not use SQL Bulk insert
+
                 var saveRegionsResult = await _sqlRepository.AddBulkRegionAsync(_regionList, cancellationToken);
                 var saveElectricityResult = await _sqlRepository.AddBulkElectricityAsync(_electricityList, cancellationToken);
-                
+
                 return saveRegionsResult && saveElectricityResult;
             }
             catch (Exception exception)
@@ -93,20 +92,22 @@ namespace Service.CsvService
             _ = Parallel.ForEach(lines, options, line =>
             {
                 var values = line.Split(_configuration.Delimiter);
-                AddRegion(_regionList, values[0], Interlocked.Increment(ref index));
+                lock (_regionList) {
+                    AddRegion(_regionList, values[0], Interlocked.Increment(ref index));
 
-                var electricityData = new Electricity
-                {
-                    Pavadinimas = !string.IsNullOrEmpty(values[1]) ? values[1] : null,
-                    RegionId = _regionList.FirstOrDefault(x => x.RegionName == values[0]).RegionId,
-                    Tipas = !string.IsNullOrEmpty(values[2]) ? values[2] : null,
-                    Numeris = !string.IsNullOrEmpty(values[3]) ? int.Parse(values[3]) : null,
-                    Ppliusas = !string.IsNullOrEmpty(values[4]) ? decimal.Parse(values[4]) : null,
-                    Plt = !string.IsNullOrEmpty(values[5]) ? DateTime.Parse(values[5]) : null,
-                    Pminusas = !string.IsNullOrEmpty(values[6]) ? decimal.Parse(values[6]) : null
-                };
+                    var electricityData = new Electricity
+                    {
+                        Pavadinimas = !string.IsNullOrEmpty(values[1]) ? values[1] : null,
+                        RegionId = _regionList.FirstOrDefault(x => x.RegionName == values[0]).RegionId,
+                        Tipas = !string.IsNullOrEmpty(values[2]) ? values[2] : null,
+                        Numeris = !string.IsNullOrEmpty(values[3]) ? int.Parse(values[3]) : null,
+                        Ppliusas = !string.IsNullOrEmpty(values[4]) ? decimal.Parse(values[4]) : null,
+                        Plt = !string.IsNullOrEmpty(values[5]) ? DateTime.Parse(values[5]) : null,
+                        Pminusas = !string.IsNullOrEmpty(values[6]) ? decimal.Parse(values[6]) : null
+                    };
 
-                _electricityList.Add(electricityData);
+                    _electricityList.Add(electricityData);
+                }
             });
         }
 
