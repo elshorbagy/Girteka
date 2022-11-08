@@ -16,7 +16,6 @@ namespace Repository.DBContext
 
         public virtual DbSet<Electricity> Electricities { get; set; } = null!;
         public virtual DbSet<Region> Regions { get; set; } = null!;
-        //public virtual DbSet<VwElectricityDatum> VwElectricityDatum { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

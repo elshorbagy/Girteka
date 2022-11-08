@@ -2,8 +2,6 @@
 {
     public class CsvData
     {
-        //TINKLAS,OBT_PAVADINIMAS,OBJ_GV_TIPAS,OBJ_NUMERIS,P+,PL_T,P-
-
         public string Tinklas { get; set; }
 
         public string? Vienetas { get; set; }

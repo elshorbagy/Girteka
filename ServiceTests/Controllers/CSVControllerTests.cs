@@ -59,10 +59,7 @@ namespace Tests.Controllers
 
         CSVController IntializeObject()
         {
-            var options = Options.Create(new CsvConfiguration()
-            {
-                Files = new List<string>()
-            });
+            IOptions<CsvConfiguration> options = Option.SetOptions();
             var csvService = new CsvService(_mockCsvReaderRepository.Object, _mockSqlRepository.Object, options, _logger.Object);
             return new CSVController(csvService);
         }
