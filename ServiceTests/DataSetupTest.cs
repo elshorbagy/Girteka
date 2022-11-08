@@ -17,11 +17,11 @@ namespace Tests
             return new SQLDBContext((DbContextOptions<SQLDBContext>)options);
         }
 
-        public static Electricity SetElectricity()
+        public static Electricity SetElectricity(int id)
         {
             return new Electricity()
             {
-                Id = 1,
+                Id = id,
                 Numeris = 222,
                 Pavadinimas ="Butas",
                 Plt = DateTime.Now,
@@ -32,11 +32,11 @@ namespace Tests
             };
         }
 
-        public static Region SetRegion()
+        public static Region SetRegion(int id)
         {
             return new Region()
             {
-                RegionId = 2,
+                RegionId = id,
                 RegionName = "Test Region"
             };
         }

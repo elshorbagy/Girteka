@@ -26,8 +26,8 @@ namespace Repository.SQLRepository.Tests
 
         void AddData()
         {
-            _dbContext.Electricities.Add(DataSetupTest.SetElectricity());
-            _dbContext.Regions.Add(DataSetupTest.SetRegion());
+            _dbContext.Electricities.Add(DataSetupTest.SetElectricity(22));
+            _dbContext.Regions.Add(DataSetupTest.SetRegion(22));
             _dbContext.SaveChanges();
         }
 
@@ -36,7 +36,7 @@ namespace Repository.SQLRepository.Tests
         {
             var list = new List<Electricity>
             {
-                DataSetupTest.SetElectricity()
+                DataSetupTest.SetElectricity(33)
             };
             var result = await _sqlRepository.AddBulkElectricityAsync(list, new CancellationToken());
 
@@ -55,7 +55,7 @@ namespace Repository.SQLRepository.Tests
         {
             var list = new List<Region>
             {
-                DataSetupTest.SetRegion()
+                DataSetupTest.SetRegion(33)
             };
             var result = await _sqlRepository.AddBulkRegionAsync(list, new CancellationToken());
 
@@ -73,7 +73,7 @@ namespace Repository.SQLRepository.Tests
         public async Task Get()
         {
             var result = await _sqlRepository.Get("Butas");
-            Assert.IsTrue(result.Any());
+            Assert.IsNotNull(result);
         }
 
         [TestMethod()]

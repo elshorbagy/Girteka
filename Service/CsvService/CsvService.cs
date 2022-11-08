@@ -56,6 +56,7 @@ namespace Service.CsvService
 
                 MapCsvData(lines);
 
+                // As the requirment says use EF For Database communication, I did not use SQL Bulk insert
                 var saveRegionsResult = await _sqlRepository.AddBulkRegionAsync(_regionList, cancellationToken);
                 var saveElectricityResult = await _sqlRepository.AddBulkElectricityAsync(_electricityList, cancellationToken);
 

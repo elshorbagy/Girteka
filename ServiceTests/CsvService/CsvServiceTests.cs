@@ -1,6 +1,4 @@
-﻿using Domain.Models;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Repository.DBContext;
@@ -34,8 +32,8 @@ namespace Service.CsvService.Tests
 
         void AddData()
         {
-            _dbContext.Electricities.Add(DataSetupTest.SetElectricity());
-            _dbContext.Regions.Add(DataSetupTest.SetRegion());
+            _dbContext.Electricities.Add(DataSetupTest.SetElectricity(1));
+            _dbContext.Regions.Add(DataSetupTest.SetRegion(11));
             _dbContext.SaveChanges();
         }
 
@@ -71,16 +69,14 @@ namespace Service.CsvService.Tests
 
         CsvService IntializeObject()
         {
-            var options = Options.Create(new CsvConfiguration()
-            {
-                Files = new List<string>()
-            });
+            var options = Option.SetOptions();
+
             return new CsvService(_mockCsvReaderRepository.Object, _sqlRepository, options, _logger.Object);
         }
 
         CsvService IntializeObjectFail()
         {
-            var options = Options.Create(new CsvConfiguration());
+            var options = Option.SetOptions();
             return new CsvService(_mockCsvReaderRepository.Object, null, options, _logger.Object);
         }
     }
